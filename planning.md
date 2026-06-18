@@ -20,16 +20,25 @@
 
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 r/udub Reddit | Student tips, freshman advice, and things I wish I knew threads | https://www.reddit.com/r/udub/ 
+
+| 2 r/udub — Registration Tips | Crowdsourced advice on MyPlan, time scheduling, and avoiding bad quarters | https://www.reddit.com/r/udub/search/?q=registration+tips
+
+| 3 Rate My Professors — UW Seattle |  Student reviews of UW professors including difficulty, grade, and comments| https://www.ratemyprofessors.com/school/1530
+
+| 4 UW Dining & HFS | Official dining hall hours, meal plan info, and residential dining options | https://www.hfs.uw.edu/dining/
+
+| 5 UW Housing & Food Services| On campus husing options, costs, and application info |https://www.hfs.uw.edu/live/
+
+| 6 UW Academic Calendar |Key dates for registration, finals, add/drop deadlines | https://www.washington.edu/students/reg/cal.html 
+
+| 7 UW Libraries Student Guide | How to access research tools, study rooms, and remote resources | https://www.lib.washington.edu/help/connect 
+
+| 8 UW IMA Recreation Center |gym access, intramurals, student fitness resource |  https://www.washington.edu/ima/ 
+
+| 9  UW Career & Internship Center |  Resume help, internship search, and career advising for students |  https://careers.uw.edu/ 
+
+| 10  UW Campus Map & Navigation |  Building locations, bus stops, shortcuts across the large campus |  https://www.washington.edu/maps/ 
 
 ---
 
