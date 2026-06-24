@@ -99,44 +99,76 @@ serving international students writing in their native language.**
 1 | What do students say about getting off the CS major waitlist at UW? | Students should mention that getting off the waitlist is difficult, that direct admission is competitive, and may reference strategies like taking prereqs early or applying to related majors first. |
 | 2 | Which dining halls do UW students recommend and which do they avoid? | Students should name specific dining halls (e.g. Cedars, Eight, District Market) with reasons — food quality, wait times, meal plan value, or location. |
 | 3 | What tips do UW students give for surviving registration on MyPlan? | Response should include specific advice like adding courses to a plan early, knowing your registration time, using the waitlist strategically, and checking for open sections the first week of the quarter. |
-| 4 | What do students say about living in the dorms vs. off-campus housing at UW? | Response should cover tradeoffs like dorm convenience vs. off-campus cost and independence, and may mention specific dorms or neighborhoods like the U-District. |
+| 4 | What do students say about living in the dorms vs. off campus housing at UW? | Response should cover tradeoffs like dorm convenience vs. off-campus cost and independence, and may mention specific dorms or neighborhoods like the U-District. |
 | 5 | What do UW students wish they had known before their first quarter? | Response should include specific actionable tips — not generic advice — such as which buildings are far apart, how to use office hours, or which resources students underutilize. |
 
 ---
 
 ## Anticipated Challenges
 
-<!-- What could go wrong? Name at least two specific risks with reasoning.
-     Consider: noisy or inconsistent documents, missing source attribution, off-topic
-     retrieval, chunks that split key information across boundaries. -->
+1. Scraping difficulties : Reddit and Rate My Professors both resist automated 
+scraping Reddit requires API access and RMP uses JavaScript rendering. I may need 
+to manually copy text from threads into plain .txt files, which is time-consuming 
+and introduces inconsistent formatting across documents.
 
-1.
+2. Noisy and inconsistent documents : Reddit posts vary wildly in length and 
+quality a thread might contain one detailed helpful comment and ten one liners 
+like "agreed" or "same lol." These low signal chunks will get embedded and retrieved 
+alongside useful ones, potentially polluting results.
 
-2.
+3. Chunk boundary splits**: Because reviews are short, a single review could get 
+split across two chunks if it lands near a boundary. The professor's name might be 
+in one chunk and the actual opinion in the next, making neither chunk retrievable 
+for a query about that professor.
 
+4. Out of date information : Reddit threads and RMP reviews may reference 
+professors, courses, or policies that have since changed. The system has no way to 
+flag stale information, which could mislead users.
 ---
 
 ## Architecture
 
-<!-- Draw a diagram of your pipeline showing the five stages:
-     Document Ingestion → Chunking → Embedding + Vector Store → Retrieval → Generation
-     Label each stage with the tool or library you're using.
-     You can use ASCII art, a Mermaid diagram, or embed a sketch as an image.
-     You'll use this diagram as context when prompting AI tools to implement each stage. -->
+```mermaid
+flowchart LR
+    A[Document Ingestion\npdfplumber / manual .txt] --> B[Chunking\nPython / LangChain]
+    B --> C[Embedding\nall-MiniLM-L6-v2\nsentence-transformers]
+    C --> D[Vector Store\nChromaDB]
+    D --> E[Retrieval\nChromaDB semantic search\ntop-k=5]
+    E --> F[Generation\nGroq\nllama-3.3-70b-versatile]
+```
 
 ---
 
 ## AI Tool Plan
 
-<!-- For each part of the pipeline below, describe:
-     - Which AI tool you plan to use (Claude, Copilot, ChatGPT, etc.)
-     - What you'll give it as input (which sections of this planning.md, which requirements)
-     - What you expect it to produce
-     - How you'll verify the output matches your spec
+**1. Document Ingestion pipeline**
+I will give Claude my Documents section and Anticipated Challenges section and ask it 
+to write a script that loads .txt files from a local folder, cleans them (removes 
+extra whitespace, empty lines, and common Reddit formatting artifacts), and outputs 
+a list of cleaned strings with source filenames attached as metadata.
 
-     "I'll use AI to help me code" is not a plan.
-     "I'll give Claude my Chunking Strategy section and ask it to implement chunk_text()
-     with my specified chunk size and overlap" is a plan. -->
+**2. Chunking**
+I will give Claude my Chunking Strategy section and ask it to implement a chunk_text() 
+function that splits cleaned documents into chunks of 300–400 characters with 50–75 
+character overlap, filters out chunks under 50 characters, and returns each chunk 
+paired with its source filename.
+
+**3. Embedding and vector store**
+I will give Claude my Retrieval Approach section and my pipeline diagram and ask it 
+to implement a script that embeds chunks using all-MiniLM-L6-v2 and loads them into 
+ChromaDB with source metadata attached to each chunk.
+
+**4. Retrieval function**
+I will give Claude my Retrieval Approach section and ask it to write a retrieve() 
+function that accepts a query string, embeds it, queries ChromaDB for the top 5 most 
+similar chunks, and returns each chunk with its text, source filename, and distance score.
+
+**5. Generation and interface**
+I will give Claude my Evaluation Plan and pipeline diagram and ask it to implement 
+an end-to-end ask() function that calls retrieve(), formats the chunks into a prompt 
+that instructs the LLM to answer only from the provided context, calls the Groq API, 
+and returns the answer with source attribution. I will also ask it to wrap this in 
+a minimal Gradio interface.
 
 **Milestone 3 — Ingestion and chunking:**
 
